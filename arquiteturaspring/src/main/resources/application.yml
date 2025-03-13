@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: Arquitetura Spring
+  jpa:
+    show-sql: true
+  main:
+    lazy-initialization: false
+
+app:
+  montadora:
+    motor-padrao: 130
+  config:
+    variavel: Valor da variável x
+    valor1: 500
+
