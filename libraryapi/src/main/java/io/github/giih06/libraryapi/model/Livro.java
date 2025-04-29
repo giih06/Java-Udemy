@@ -34,7 +34,7 @@ public class Livro {
     private BigDecimal preco;
 
     // chave estrangeira
-    @ManyToOne // Um autor pode ter muitos livros
+    @ManyToOne//(cascade = CascadeType.ALL) // Um autor pode ter muitos livros
     @JoinColumn(name = "id_autor")
     private Autor autor;
 }
