@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "autor", schema = "public")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "livros")
 public class Autor {
 
     @Id
@@ -30,7 +30,8 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    // @OneToMany(mappedBy = "autor") // um autor para muitos livros
-    @Transient
+    // um autor para muitos livros ; O cascade significa que se for removido o autor, será removido seus livros automaticamente
+    // o fetcher eager significa que sempre que o autor for carregado, serão carregados os livros também. No lazy os livros não serão carregados juntos com autor
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Livro> livros;
 }
