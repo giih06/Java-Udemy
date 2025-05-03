@@ -6,9 +6,11 @@ import io.github.giih06.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -107,5 +109,81 @@ class LivroRepositoryTest {
     void deletarCascade() {
         UUID idLivro = UUID.fromString("967e2466-2bdc-427b-b959-4a561e4ab7da");
         livroRepository.deleteById(idLivro);
+    }
+
+    @Test
+    @Transactional
+    void buscarLivroTest() {
+        UUID id = UUID.fromString("967e2466-2bdc-427b-b959-4a561e4ab7da");
+        Livro livro = livroRepository.findById(id).orElse(null);
+        System.out.println("Livro: ");
+        System.out.println(livro.getTitulo());
+//        System.out.println("Autor: ");
+//        System.out.println(livro.getAutor().getNome());
+    }
+
+    @Test
+    void pesquisarPorTituloTest() {
+        List<Livro> lista = livroRepository.findByTitulo("A Branca de Neve");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisarPorISBNTest() {
+        List<Livro> lista = livroRepository.findByIsbn("32234-53322");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisarPorTituloEPrecoTest() {
+        var preco = BigDecimal.valueOf(69.00);
+        List<Livro> lista = livroRepository.findByTituloAndPreco("O pequeno Príncipe", preco);
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void listarLivrosComQueryJPQL() {
+        var resultado = livroRepository.listarTodosOrdenadoPorTituloAndPreco();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarAutoresDosLivros() {
+        var resultado = livroRepository.listarAutoresDosLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarTitulosNaoRepetidosDosLivros() {
+        var resultado = livroRepository.listarNomesDiferentesLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarGenerosDeLivrosAutoresBrasileiros() {
+        var resultado = livroRepository.listarGenerosAutoresBrasileiros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarPorGeneroQueryParam() {
+        var resultado = livroRepository.findByGenero(GeneroLivro.MISTERIO, "preco");
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarPorGeneroPositionalQueryParam() {
+        var resultado = livroRepository.findByGeneroPositionalParameters(GeneroLivro.MISTERIO, "preco");
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void deletePorGeneroTest() {
+        livroRepository.deleteByGenero(GeneroLivro.MISTERIO);
+    }
+
+    @Test
+    void updateDataPublicacaoTest() {
+        livroRepository.updateDataPublicacao(LocalDate.of(2000,1,1));
     }
 }
